@@ -1,0 +1,232 @@
+{
+  "dashboard_title": "Global Development Pulse",
+  "styling": {
+    "theme": "dark",
+    "color_scheme": [
+      "#1f77b4",
+      "#ff7f0e",
+      "#2ca02c",
+      "#d62728",
+      "#9467bd"
+    ],
+    "font_family": "Roboto, sans-serif",
+    "background_style": "linear-gradient(135deg, #0d1117, #1e1e1e)"
+  },
+  "layout": {
+    "type": "grid",
+    "rows": 3,
+    "columns": 3,
+    "description": "Top row: controls panel; middle row: three coordinated plots; bottom row: insights panel and data table"
+  },
+  "plots": [
+    {
+      "plot_id": "choropleth_map",
+      "plot_type": "choropleth",
+      "title": "Development Indicator by Country",
+      "description": "Shows the selected metric (GDP, Life Expectancy, etc.) across all countries for the chosen year.",
+      "data_source": "global_development_dataset",
+      "interactions": [
+        "country_selection",
+        "metric_selection",
+        "year_slider"
+      ],
+      "position": {
+        "row": 2,
+        "col": 1
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "time_series",
+      "plot_type": "time series",
+      "title": "Trend Over Time",
+      "description": "Displays the evolution of the selected metric for the chosen country over the selected time range.",
+      "data_source": "global_development_dataset",
+      "interactions": [
+        "country_selection",
+        "metric_selection",
+        "year_slider"
+      ],
+      "position": {
+        "row": 2,
+        "col": 2
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "sankey_flow",
+      "plot_type": "sankey",
+      "title": "Sectoral Flow of Development",
+      "description": "Illustrates the flow of investment from GDP to Education, Health, and Infrastructure sectors for the selected country and year.",
+      "data_source": "global_development_dataset",
+      "interactions": [
+        "country_selection",
+        "year_slider"
+      ],
+      "position": {
+        "row": 2,
+        "col": 3
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "data_table",
+      "plot_type": "table",
+      "title": "Country Data Snapshot",
+      "description": "Tabular view of all metrics for the selected country and year.",
+      "data_source": "global_development_dataset",
+      "interactions": [
+        "country_selection",
+        "year_slider"
+      ],
+      "position": {
+        "row": 3,
+        "col": 1
+      },
+      "size": {
+        "width": 1200,
+        "height": 200
+      }
+    }
+  ],
+  "controls": [
+    {
+      "control_id": "country_selector",
+      "control_type": "dropdown",
+      "label": "Country",
+      "options": [
+        "All",
+        "United States",
+        "China",
+        "India",
+        "Brazil",
+        "Germany",
+        "Nigeria"
+      ],
+      "default_value": "All",
+      "description": "Select a country to drill down into its data."
+    },
+    {
+      "control_id": "metric_selector",
+      "control_type": "dropdown",
+      "label": "Metric",
+      "options": [
+        "GDP per Capita",
+        "Life Expectancy",
+        "Population",
+        "Education Index"
+      ],
+      "default_value": "GDP per Capita",
+      "description": "Choose the development indicator to visualize."
+    },
+    {
+      "control_id": "year_slider",
+      "control_type": "slider",
+      "label": "Year",
+      "options": [],
+      "default_value": 2020,
+      "description": "Select the year for which data is displayed."
+    },
+    {
+      "control_id": "play_pause_button",
+      "control_type": "play/pause",
+      "label": "Play/Pause Animation",
+      "default_value": false,
+      "description": "Animate the dashboard across years."
+    }
+  ],
+  "insights_panel": {
+    "title": "Dynamic Insights",
+    "content_sections": [
+      "Key Trends: Highlight the top 3 countries with fastest GDP growth in the selected period.",
+      "Comparative Analysis: Show how the selected metric compares across continents.",
+      "Anomaly Detection: Flag years where the metric deviated >2\u03c3 from the mean."
+    ],
+    "update_triggers": [
+      "country_selector",
+      "metric_selector",
+      "year_slider",
+      "play_pause_button"
+    ]
+  },
+  "animations": [
+    {
+      "type": "time progression",
+      "description": "Automatically updates all plots to the next year when play is active.",
+      "triggers": [
+        "play_pause_button"
+      ]
+    },
+    {
+      "type": "smooth transition",
+      "description": "Interpolates choropleth color changes and time series points between years.",
+      "triggers": [
+        "year_slider",
+        "play_pause_button"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "from": "country_selector",
+      "to": [
+        "choropleth_map",
+        "time_series",
+        "sankey_flow",
+        "data_table"
+      ],
+      "type": "filter",
+      "description": "Filters all visualizations to the selected country."
+    },
+    {
+      "from": "metric_selector",
+      "to": [
+        "choropleth_map",
+        "time_series",
+        "sankey_flow"
+      ],
+      "type": "update",
+      "description": "Updates the metric displayed across plots."
+    },
+    {
+      "from": "year_slider",
+      "to": [
+        "choropleth_map",
+        "time_series",
+        "sankey_flow",
+        "data_table"
+      ],
+      "type": "time update",
+      "description": "Synchronizes all plots to the selected year."
+    },
+    {
+      "from": "play_pause_button",
+      "to": [
+        "choropleth_map",
+        "time_series",
+        "sankey_flow",
+        "data_table"
+      ],
+      "type": "animation",
+      "description": "Starts/stops automatic year progression."
+    },
+    {
+      "from": "choropleth_map",
+      "to": [
+        "time_series",
+        "sankey_flow"
+      ],
+      "type": "click",
+      "description": "Clicking a country on the map updates the time series and sankey to that country."
+    }
+  ]
+}

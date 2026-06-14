@@ -1,0 +1,272 @@
+{
+  "dashboard_title": "Patient Health Insights Dashboard",
+  "styling": {
+    "theme": "dark",
+    "color_scheme": [
+      "#1f2937",
+      "#374151",
+      "#4b5563",
+      "#9ca3af",
+      "#f59e0b"
+    ],
+    "font_family": "\"Inter\", sans-serif",
+    "background_style": "linear-gradient(180deg, #111827 0%, #1f2937 100%)"
+  },
+  "layout": {
+    "type": "grid",
+    "rows": 3,
+    "columns": 4,
+    "description": "Two rows of visualizations, a controls panel on the left, and an insights panel on the right."
+  },
+  "plots": [
+    {
+      "plot_id": "diag_bar",
+      "plot_type": "bar",
+      "title": "Primary Diagnosis Distribution",
+      "description": "Counts of each diagnosis category, filtered by user selections.",
+      "data_source": "Primary_Diagnosis",
+      "interactions": [
+        "legend_click",
+        "filter"
+      ],
+      "position": {
+        "row": 1,
+        "col": 2
+      },
+      "size": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "plot_id": "bmi_bp_scatter",
+      "plot_type": "scatter3d",
+      "title": "BMI vs. Systolic BP",
+      "description": "3\u2011D scatter of BMI, Blood Pressure Systolic, and Blood Sugar Level.",
+      "data_source": [
+        "BMI",
+        "Blood_Pressure_Systolic",
+        "Blood_Sugar_Level"
+      ],
+      "interactions": [
+        "hover",
+        "select"
+      ],
+      "position": {
+        "row": 1,
+        "col": 4
+      },
+      "size": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "plot_id": "exercise_box",
+      "plot_type": "box",
+      "title": "BMI by Exercise Frequency",
+      "description": "Box plots of BMI across exercise frequency categories.",
+      "data_source": [
+        "Exercise_Frequency",
+        "BMI"
+      ],
+      "interactions": [
+        "hover"
+      ],
+      "position": {
+        "row": 2,
+        "col": 1
+      },
+      "size": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "plot_id": "smoke_sankey",
+      "plot_type": "sankey",
+      "title": "Smoking Status \u2192 Primary Diagnosis",
+      "description": "Flow of patients from smoking status to diagnosis.",
+      "data_source": [
+        "Smoking_Status",
+        "Primary_Diagnosis"
+      ],
+      "interactions": [
+        "click"
+      ],
+      "position": {
+        "row": 2,
+        "col": 3
+      },
+      "size": {
+        "width": 2,
+        "height": 2
+      }
+    },
+    {
+      "plot_id": "patient_table",
+      "plot_type": "table",
+      "title": "Patient Snapshot",
+      "description": "Tabular view of patients matching current filters.",
+      "data_source": "full_dataset",
+      "interactions": [
+        "row_select"
+      ],
+      "position": {
+        "row": 3,
+        "col": 1
+      },
+      "size": {
+        "width": 4,
+        "height": 1
+      }
+    }
+  ],
+  "controls": [
+    {
+      "control_id": "gender_filter",
+      "control_type": "dropdown",
+      "label": "Gender",
+      "options": [
+        "All",
+        "Male",
+        "Female"
+      ],
+      "default_value": "All",
+      "description": "Filter patients by gender."
+    },
+    {
+      "control_id": "age_range",
+      "control_type": "range_slider",
+      "label": "Age Range",
+      "options": null,
+      "default_value": [
+        18,
+        89
+      ],
+      "description": "Select age range."
+    },
+    {
+      "control_id": "bmi_range",
+      "control_type": "range_slider",
+      "label": "BMI Range",
+      "options": null,
+      "default_value": [
+        18.4,
+        39.9
+      ],
+      "description": "Select BMI range."
+    },
+    {
+      "control_id": "smoking_filter",
+      "control_type": "checkbox_group",
+      "label": "Smoking Status",
+      "options": [
+        "Current Smoker",
+        "Former Smoker",
+        "Non-smoker"
+      ],
+      "default_value": [
+        "Current Smoker",
+        "Former Smoker",
+        "Non-smoker"
+      ],
+      "description": "Select smoking status categories."
+    },
+    {
+      "control_id": "exercise_filter",
+      "control_type": "dropdown",
+      "label": "Exercise Frequency",
+      "options": [
+        "All",
+        "Daily",
+        "1-2 times/week",
+        "3-5 times/week",
+        "Never"
+      ],
+      "default_value": "All",
+      "description": "Filter by exercise frequency."
+    },
+    {
+      "control_id": "diag_filter",
+      "control_type": "dropdown",
+      "label": "Primary Diagnosis",
+      "options": [
+        "All",
+        "Hypertension",
+        "Diabetes",
+        "Heart Disease",
+        "Obesity",
+        "Healthy"
+      ],
+      "default_value": "All",
+      "description": "Filter by diagnosis."
+    }
+  ],
+  "insights_panel": {
+    "title": "Dynamic Insights",
+    "content_sections": [
+      "Key Trends: Rising hypertension and diabetes prevalence.",
+      "Health Metric Correlations: BMI \u2194 Blood Pressure.",
+      "Lifestyle Impact: Smoking status linked to diagnosis.",
+      "Healthcare Utilization: Hospital visits \u2191 with hypertension."
+    ],
+    "update_triggers": [
+      "gender_filter",
+      "age_range",
+      "bmi_range",
+      "smoking_filter",
+      "exercise_filter",
+      "diag_filter"
+    ]
+  },
+  "animations": [
+    {
+      "type": "smooth_transition",
+      "description": "All plots transition smoothly when filters change.",
+      "triggers": [
+        "all_controls"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "from": "diag_bar",
+      "to": [
+        "bmi_bp_scatter",
+        "exercise_box",
+        "smoke_sankey",
+        "patient_table"
+      ],
+      "type": "filter",
+      "description": "Selecting a diagnosis category filters all other plots."
+    },
+    {
+      "from": "smoke_sankey",
+      "to": [
+        "patient_table"
+      ],
+      "type": "click",
+      "description": "Clicking a flow segment shows matching patients."
+    },
+    {
+      "from": "patient_table",
+      "to": [
+        "diag_bar",
+        "bmi_bp_scatter",
+        "exercise_box",
+        "smoke_sankey"
+      ],
+      "type": "row_select",
+      "description": "Selecting a patient highlights related data."
+    },
+    {
+      "from": "controls",
+      "to": [
+        "all_plots"
+      ],
+      "type": "filter",
+      "description": "All controls update every plot."
+    }
+  ]
+}

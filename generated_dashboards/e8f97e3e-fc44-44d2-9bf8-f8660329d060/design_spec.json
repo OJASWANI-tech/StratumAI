@@ -1,0 +1,292 @@
+{
+  "dashboard_title": "Fleet Performance & Revenue Insights",
+  "styling": {
+    "theme": "dark-modern",
+    "color_scheme": [
+      "#1f2937",
+      "#374151",
+      "#4b5563",
+      "#9ca3af",
+      "#f59e0b",
+      "#10b981"
+    ],
+    "font_family": "\"Inter\", sans-serif",
+    "background_style": "linear-gradient(180deg, #111827 0%, #1f2937 100%)"
+  },
+  "layout": {
+    "type": "grid",
+    "rows": 3,
+    "columns": 2,
+    "description": "Sidebar controls on the left, main visual area on the right. Top row contains the title and play/pause button. Bottom rows hold the four coordinated plots and a data table."
+  },
+  "plots": [
+    {
+      "plot_id": "choropleth_revenue",
+      "plot_type": "choropleth",
+      "title": "Revenue by Origin City",
+      "description": "Shows average revenue per origin city. Cities are colored by revenue magnitude.",
+      "data_source": "df",
+      "interactions": [
+        "hover",
+        "legend_filter"
+      ],
+      "position": {
+        "row": 1,
+        "col": 1
+      },
+      "size": {
+        "width": 600,
+        "height": 400
+      }
+    },
+    {
+      "plot_id": "time_series_revenue",
+      "plot_type": "time_series",
+      "title": "Revenue Over Departure Time",
+      "description": "Animated line chart of revenue aggregated by hour of departure.",
+      "data_source": "df",
+      "interactions": [
+        "hover",
+        "brush"
+      ],
+      "position": {
+        "row": 1,
+        "col": 2
+      },
+      "size": {
+        "width": 600,
+        "height": 400
+      }
+    },
+    {
+      "plot_id": "scatter_3d",
+      "plot_type": "3d_scatter",
+      "title": "Distance vs Fuel vs Revenue",
+      "description": "3\u2011D scatter plot showing the relationship between distance, fuel consumption and revenue.",
+      "data_source": "df",
+      "interactions": [
+        "rotate",
+        "hover"
+      ],
+      "position": {
+        "row": 2,
+        "col": 1
+      },
+      "size": {
+        "width": 600,
+        "height": 400
+      }
+    },
+    {
+      "plot_id": "sankey_routes",
+      "plot_type": "sankey",
+      "title": "Route Flow Sankey",
+      "description": "Shows passenger flow from Origin to Destination via selected Route.",
+      "data_source": "df",
+      "interactions": [
+        "click",
+        "hover"
+      ],
+      "position": {
+        "row": 2,
+        "col": 2
+      },
+      "size": {
+        "width": 600,
+        "height": 400
+      }
+    },
+    {
+      "plot_id": "data_table",
+      "plot_type": "table",
+      "title": "Filtered Data Table",
+      "description": "Shows the raw data for the currently selected filters.",
+      "data_source": "df",
+      "interactions": [
+        "sort",
+        "filter"
+      ],
+      "position": {
+        "row": 3,
+        "col": 1
+      },
+      "size": {
+        "width": 1200,
+        "height": 200
+      }
+    }
+  ],
+  "controls": [
+    {
+      "control_id": "route_selector",
+      "control_type": "dropdown",
+      "label": "Route",
+      "options": [
+        "Route A",
+        "Route B",
+        "Route C",
+        "Route D",
+        "Route E"
+      ],
+      "default_value": "All",
+      "description": "Filter by route."
+    },
+    {
+      "control_id": "origin_selector",
+      "control_type": "dropdown",
+      "label": "Origin City",
+      "options": [
+        "City 1",
+        "City 2",
+        "City 3",
+        "City 4",
+        "City 5",
+        "City 6",
+        "City 7",
+        "City 8"
+      ],
+      "default_value": "All",
+      "description": "Filter by origin."
+    },
+    {
+      "control_id": "destination_selector",
+      "control_type": "dropdown",
+      "label": "Destination City",
+      "options": [
+        "City 1",
+        "City 2",
+        "City 3",
+        "City 4",
+        "City 5",
+        "City 6",
+        "City 7",
+        "City 8"
+      ],
+      "default_value": "All",
+      "description": "Filter by destination."
+    },
+    {
+      "control_id": "time_slider",
+      "control_type": "slider",
+      "label": "Departure Time",
+      "options": null,
+      "default_value": [
+        0,
+        23
+      ],
+      "description": "Select hour range for departure times."
+    },
+    {
+      "control_id": "play_pause",
+      "control_type": "play/pause",
+      "label": "Play/Pause Animation",
+      "options": null,
+      "default_value": false,
+      "description": "Animate plots over time."
+    }
+  ],
+  "insights_panel": {
+    "title": "Dynamic Insights",
+    "content_sections": [
+      "Top Routes by Revenue",
+      "Peak Departure Hours",
+      "Fuel Efficiency Trends",
+      "Delay Impact on Revenue"
+    ],
+    "update_triggers": [
+      "route_selector",
+      "origin_selector",
+      "destination_selector",
+      "time_slider",
+      "play_pause"
+    ]
+  },
+  "animations": [
+    {
+      "type": "time_advance",
+      "description": "Automatically advances the time slider and updates all plots.",
+      "triggers": [
+        "play_pause"
+      ]
+    },
+    {
+      "type": "smooth_transition",
+      "description": "Smoothly interpolates plot data when time changes.",
+      "triggers": [
+        "time_slider"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "from": "route_selector",
+      "to": [
+        "choropleth_revenue",
+        "time_series_revenue",
+        "scatter_3d",
+        "sankey_routes",
+        "data_table"
+      ],
+      "type": "filter",
+      "description": "All plots filter data by selected route."
+    },
+    {
+      "from": "origin_selector",
+      "to": [
+        "choropleth_revenue",
+        "time_series_revenue",
+        "scatter_3d",
+        "sankey_routes",
+        "data_table"
+      ],
+      "type": "filter",
+      "description": "All plots filter data by selected origin."
+    },
+    {
+      "from": "destination_selector",
+      "to": [
+        "choropleth_revenue",
+        "time_series_revenue",
+        "scatter_3d",
+        "sankey_routes",
+        "data_table"
+      ],
+      "type": "filter",
+      "description": "All plots filter data by selected destination."
+    },
+    {
+      "from": "time_slider",
+      "to": [
+        "time_series_revenue",
+        "scatter_3d",
+        "sankey_routes"
+      ],
+      "type": "brush",
+      "description": "Time slider updates time\u2011based plots."
+    },
+    {
+      "from": "play_pause",
+      "to": [
+        "time_slider"
+      ],
+      "type": "animation",
+      "description": "Play/Pause button controls time slider animation."
+    },
+    {
+      "from": "choropleth_revenue",
+      "to": [
+        "data_table"
+      ],
+      "type": "click",
+      "description": "Clicking a city highlights its rows in the data table."
+    },
+    {
+      "from": "sankey_routes",
+      "to": [
+        "data_table"
+      ],
+      "type": "click",
+      "description": "Clicking a flow highlights corresponding rows."
+    }
+  ]
+}

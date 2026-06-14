@@ -1,0 +1,302 @@
+{
+  "dashboard_title": "Agri\u2011Climate Nexus Dashboard",
+  "styling": {
+    "theme": "dark-modern",
+    "color_scheme": [
+      "#1f77b4",
+      "#ff7f0e",
+      "#2ca02c",
+      "#d62728",
+      "#9467bd"
+    ],
+    "font_family": "\"Inter\", sans-serif",
+    "background_style": "linear-gradient(135deg, #0d1117, #1e1e1e)"
+  },
+  "layout": {
+    "type": "grid",
+    "rows": 3,
+    "columns": 3,
+    "description": "Top row: controls & insights, middle row: 3 main plots, bottom row: data table"
+  },
+  "plots": [
+    {
+      "plot_id": "choropleth_export",
+      "plot_type": "choropleth",
+      "title": "Export Value by Country",
+      "description": "Shows USD\u202fmillion export value per country for the selected year and crop.",
+      "data_source": "Export_Value_USD_million",
+      "interactions": [
+        "country",
+        "crop",
+        "year"
+      ],
+      "position": {
+        "row": 2,
+        "col": 1
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "time_series_yield",
+      "plot_type": "time series",
+      "title": "Crop Yield Over Time",
+      "description": "Annual yield (tons/ha) for the selected crop and country.",
+      "data_source": "Yield_tons_per_hectare",
+      "interactions": [
+        "country",
+        "crop",
+        "year"
+      ],
+      "position": {
+        "row": 2,
+        "col": 2
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "scatter_temp_rain",
+      "plot_type": "scatter",
+      "title": "Temperature vs Rainfall Impact",
+      "description": "Scatter of Avg_Temperature_C vs Rainfall_mm colored by yield.",
+      "data_source": [
+        "Avg_Temperature_C",
+        "Rainfall_mm",
+        "Yield_tons_per_hectare"
+      ],
+      "interactions": [
+        "country",
+        "crop",
+        "year"
+      ],
+      "position": {
+        "row": 2,
+        "col": 3
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "sankey_fertilizer",
+      "plot_type": "sankey",
+      "title": "Fertilizer Use \u2192 Yield Flow",
+      "description": "Shows how fertilizer input translates to yield across crops.",
+      "data_source": [
+        "Fertilizer_Use_kg_per_hectare",
+        "Yield_tons_per_hectare"
+      ],
+      "interactions": [
+        "country",
+        "crop",
+        "year"
+      ],
+      "position": {
+        "row": 3,
+        "col": 1
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "data_table",
+      "plot_type": "table",
+      "title": "Filtered Data Table",
+      "description": "Shows raw rows for the current filter set.",
+      "data_source": "full_dataset",
+      "interactions": [
+        "country",
+        "crop",
+        "year"
+      ],
+      "position": {
+        "row": 3,
+        "col": 2
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    }
+  ],
+  "controls": [
+    {
+      "control_id": "country_selector",
+      "control_type": "dropdown",
+      "label": "Country",
+      "options": [
+        "All",
+        "Argentina",
+        "Brazil",
+        "Canada",
+        "India",
+        "Nigeria",
+        "USA",
+        "China",
+        "Australia",
+        "France",
+        "Germany"
+      ],
+      "default_value": "All",
+      "description": "Filter by country (All shows all countries)."
+    },
+    {
+      "control_id": "crop_selector",
+      "control_type": "dropdown",
+      "label": "Crop",
+      "options": [
+        "All",
+        "Wheat",
+        "Corn",
+        "Rice",
+        "Soybean",
+        "Barley"
+      ],
+      "default_value": "All",
+      "description": "Filter by crop type."
+    },
+    {
+      "control_id": "year_slider",
+      "control_type": "slider",
+      "label": "Year",
+      "options": null,
+      "default_value": 2010,
+      "description": "Select year range for animation."
+    },
+    {
+      "control_id": "play_pause_button",
+      "control_type": "play/pause",
+      "label": "Play/Pause",
+      "options": null,
+      "default_value": false,
+      "description": "Animate through years."
+    },
+    {
+      "control_id": "color_scheme_selector",
+      "control_type": "dropdown",
+      "label": "Color Scheme",
+      "options": [
+        "Blue",
+        "Orange",
+        "Green",
+        "Red",
+        "Purple"
+      ],
+      "default_value": "Blue",
+      "description": "Choose base color for plots."
+    }
+  ],
+  "insights_panel": {
+    "title": "Dynamic Insights",
+    "content_sections": [
+      "Climate Impact: Temperature and rainfall trends for selected crop and country.",
+      "Yield Efficiency: Correlation between fertilizer use and yield.",
+      "Export Dynamics: Export value trends relative to yield."
+    ],
+    "update_triggers": [
+      "country_selector",
+      "crop_selector",
+      "year_slider",
+      "play_pause_button"
+    ]
+  },
+  "animations": [
+    {
+      "type": "time",
+      "description": "Automatic year progression when play is active.",
+      "triggers": [
+        "play_pause_button",
+        "year_slider"
+      ]
+    },
+    {
+      "type": "smooth_transition",
+      "description": "Fade/slide transitions between years.",
+      "triggers": [
+        "year_slider",
+        "play_pause_button"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "from": "country_selector",
+      "to": [
+        "choropleth_export",
+        "time_series_yield",
+        "scatter_temp_rain",
+        "sankey_fertilizer",
+        "data_table"
+      ],
+      "type": "filter",
+      "description": "Country filter updates all plots and table."
+    },
+    {
+      "from": "crop_selector",
+      "to": [
+        "choropleth_export",
+        "time_series_yield",
+        "scatter_temp_rain",
+        "sankey_fertilizer",
+        "data_table"
+      ],
+      "type": "filter",
+      "description": "Crop filter updates all plots and table."
+    },
+    {
+      "from": "year_slider",
+      "to": [
+        "choropleth_export",
+        "time_series_yield",
+        "scatter_temp_rain",
+        "sankey_fertilizer",
+        "data_table"
+      ],
+      "type": "filter",
+      "description": "Year filter updates all plots and table."
+    },
+    {
+      "from": "play_pause_button",
+      "to": [
+        "year_slider"
+      ],
+      "type": "animation",
+      "description": "Controls year slider animation."
+    },
+    {
+      "from": "color_scheme_selector",
+      "to": [
+        "choropleth_export",
+        "time_series_yield",
+        "scatter_temp_rain",
+        "sankey_fertilizer"
+      ],
+      "type": "color",
+      "description": "Applies selected color scheme to all plots."
+    },
+    {
+      "from": "scatter_temp_rain",
+      "to": [
+        "time_series_yield"
+      ],
+      "type": "highlight",
+      "description": "Hover on scatter point highlights corresponding year in time series."
+    },
+    {
+      "from": "choropleth_export",
+      "to": [
+        "time_series_yield"
+      ],
+      "type": "highlight",
+      "description": "Hover on country highlights its time series."
+    }
+  ]
+}

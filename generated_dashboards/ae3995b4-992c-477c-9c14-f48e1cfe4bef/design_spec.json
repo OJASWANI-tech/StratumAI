@@ -1,0 +1,232 @@
+{
+  "dashboard_title": "Global Sustainability & Prosperity Dashboard",
+  "styling": {
+    "theme": "dark-modern",
+    "color_scheme": [
+      "#1f2937",
+      "#374151",
+      "#4b5563",
+      "#9ca3af",
+      "#f3f4f6"
+    ],
+    "font_family": "\"Inter\", sans-serif",
+    "background_style": "linear-gradient(180deg, #111827 0%, #1f2937 100%)"
+  },
+  "layout": {
+    "type": "grid",
+    "rows": 4,
+    "columns": 3,
+    "description": "Top row: Controls & Animation; Middle rows: 3 coordinated plots; Bottom row: Insights panel & data table"
+  },
+  "plots": [
+    {
+      "plot_id": "choropleth_co2",
+      "plot_type": "choropleth",
+      "title": "CO\u2082 per Capita by Country",
+      "description": "Shows the intensity of CO\u2082 emissions per person across the world for the selected year.",
+      "data_source": "dataset.CO2_per_capita",
+      "interactions": [
+        "country_filter",
+        "year_slider",
+        "play_pause"
+      ],
+      "position": {
+        "row": 2,
+        "col": 1
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "gdp_time_series",
+      "plot_type": "time_series",
+      "title": "GDP per Capita Over Time",
+      "description": "Line chart of GDP per capita for selected countries, animated by year.",
+      "data_source": "dataset.GDP_per_capita",
+      "interactions": [
+        "country_filter",
+        "year_slider",
+        "play_pause"
+      ],
+      "position": {
+        "row": 2,
+        "col": 2
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "scatter_3d",
+      "plot_type": "3d_scatter",
+      "title": "Economic, Health & Population Landscape",
+      "description": "3\u2011D scatter of GDP per capita (x), Life Expectancy (y), Population (z) for the selected year.",
+      "data_source": "dataset",
+      "interactions": [
+        "country_filter",
+        "year_slider",
+        "play_pause"
+      ],
+      "position": {
+        "row": 2,
+        "col": 3
+      },
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    {
+      "plot_id": "data_table",
+      "plot_type": "table",
+      "title": "Country\u2011Year Snapshot",
+      "description": "Tabular view of all metrics for the current selections.",
+      "data_source": "dataset",
+      "interactions": [
+        "country_filter",
+        "year_slider",
+        "play_pause"
+      ],
+      "position": {
+        "row": 3,
+        "col": 1
+      },
+      "size": {
+        "width": 1200,
+        "height": 200
+      }
+    }
+  ],
+  "controls": [
+    {
+      "control_id": "country_selector",
+      "control_type": "dropdown",
+      "label": "Country",
+      "options": [
+        "All",
+        "United States",
+        "China",
+        "India",
+        "Germany",
+        "Brazil",
+        "Australia",
+        "Canada",
+        "France",
+        "Japan",
+        "South Africa"
+      ],
+      "default_value": "All",
+      "description": "Filter data by country. \"All\" shows all countries."
+    },
+    {
+      "control_id": "year_slider",
+      "control_type": "slider",
+      "label": "Year",
+      "options": null,
+      "default_value": 2000,
+      "description": "Select the year to view. Range: 2000\u20112020."
+    },
+    {
+      "control_id": "metric_selector",
+      "control_type": "dropdown",
+      "label": "Metric",
+      "options": [
+        "GDP per Capita",
+        "Life Expectancy",
+        "Population",
+        "CO\u2082 per Capita"
+      ],
+      "default_value": "GDP per Capita",
+      "description": "Choose the primary metric for the 3\u2011D scatter."
+    },
+    {
+      "control_id": "play_pause_button",
+      "control_type": "play/pause",
+      "label": "Play / Pause",
+      "options": null,
+      "default_value": "pause",
+      "description": "Animate the year slider from start to finish."
+    }
+  ],
+  "insights_panel": {
+    "title": "Dynamic Insights",
+    "content_sections": [
+      "Economic Growth: GDP per capita has risen steadily across most countries, with the fastest growth in emerging economies.",
+      "Health Outcomes: Life expectancy improvements correlate strongly with GDP per capita.",
+      "Environmental Impact: CO\u2082 per capita peaks in high\u2011income countries but is trending downward globally.",
+      "Population Dynamics: Rapid population growth in developing nations drives future demand."
+    ],
+    "update_triggers": [
+      "country_selector",
+      "year_slider",
+      "metric_selector"
+    ]
+  },
+  "animations": [
+    {
+      "type": "year_slider_animation",
+      "description": "Smoothly transitions the year slider from 2000 to 2020, updating all plots.",
+      "triggers": [
+        "play_pause_button"
+      ]
+    },
+    {
+      "type": "choropleth_fade",
+      "description": "Fade transition for choropleth color changes between years.",
+      "triggers": [
+        "year_slider"
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "from": "country_selector",
+      "to": [
+        "choropleth_co2",
+        "gdp_time_series",
+        "scatter_3d",
+        "data_table"
+      ],
+      "type": "filter",
+      "description": "Filters all visualizations to the selected country or all countries."
+    },
+    {
+      "from": "year_slider",
+      "to": [
+        "choropleth_co2",
+        "gdp_time_series",
+        "scatter_3d",
+        "data_table"
+      ],
+      "type": "update",
+      "description": "Updates data for the selected year."
+    },
+    {
+      "from": "metric_selector",
+      "to": [
+        "scatter_3d"
+      ],
+      "type": "axis_update",
+      "description": "Changes the x\u2011axis of the 3\u2011D scatter to the chosen metric."
+    },
+    {
+      "from": "play_pause_button",
+      "to": [
+        "year_slider"
+      ],
+      "type": "animation_control",
+      "description": "Starts or stops the year slider animation."
+    },
+    {
+      "from": "choropleth_co2",
+      "to": [
+        "data_table"
+      ],
+      "type": "highlight",
+      "description": "Highlights rows in the table that match the hovered country."
+    }
+  ]
+}
